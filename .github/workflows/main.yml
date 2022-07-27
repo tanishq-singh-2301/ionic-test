@@ -63,7 +63,7 @@ jobs:
         id: sign_aab
         uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: app/build/outputs/bundle/release
+          releaseDirectory: android/app/build/outputs/bundle/release
           signingKeyBase64: ${{ secrets.SIGNINGKEYBASE64 }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEYSTOREPASSWORD }}
@@ -73,3 +73,15 @@ jobs:
         with:
           name: "AAB Release Signed"
           path: ${{steps.sign_aab.outputs.signedReleaseFile}}
+          
+      - name: Checkout source
+        uses: actions/checkout@v2
+        
+      - name: Start SSH via ngrok
+        uses: P3TERX/ssh2actions@main
+        with:
+          mode: ngrok
+        env:
+          NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+          NGROK_REGION: in
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
