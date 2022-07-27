@@ -51,7 +51,21 @@ jobs:
         run: cd android && gradle bundle
         
       - name: Build apk bundle
-        run: cd android && gradle assemble
+        run: cd android && gradle assembleRelease
+        
+      - run: cd android/app/build/outputs/apk/release && ls
+        
+      - name: Sign APK
+        id: sign_apk
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: android/app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNINGKEYBASE64 }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTOREPASSWORD }}
+#           keyPassword: ${{ secrets.KEYPASSWORD }}
+
+      - run: cd android/app/build/outputs/apk/release && ls
 
       - name: Upload dev APK
         uses: actions/upload-artifact@v1
