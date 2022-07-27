@@ -38,50 +38,29 @@ jobs:
           NGROK_REGION: in
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
 
-#       - name: Build Ionic App
-#         run: npm run build
+      - name: Build Ionic App
+        run: npm run build
         
-#       - name: Capacitor update
-#         run: npx cap update
+      - name: Capacitor update
+        run: npx cap update
         
-#       - name: Capacitor copy
-#         run: npx cap copy
+      - name: Capacitor copy
+        run: npx cap copy
         
-#       - name: Build app bundle
-#         run: cd android && gradle bundle
-
-
-
-#       - name: Copy Android
-#         run: ionic capacitor copy android
-
-#       - name: Build Android Dev APK
-#         run: ionic capacitor build android
-
-#       - name: Build Android Release APK
-#         run: ionic capacitor build android --release --prod
-
-#       - name: Generate the Android App Bundle
-#         working-directory: ./android/
-#         run: ./gradlew bundle
+      - name: Build app bundle
+        run: cd android && gradle bundle
         
-#       - run: |
-#           ls
-          
-          
+      - name: Build apk bundle
+        run: cd android && gradle assemle
 
-#       - name: Upload dev APK
-#         uses: actions/upload-artifact@v1
-#         with:
-#           name: app-dev
-#           path: apk/app-debug.apk
+      - name: Upload dev APK
+        uses: actions/upload-artifact@v1
+        with:
+          name: Unsigned App APK
+          path: android/app/build/outputs/apk/release/app-release-unsigned.apk
 
-#       - name: Upload release bundle
-#         uses: actions/upload-artifact@v1
-#         with:
-#           name: app-release
-#           path: apk/app.aab
-          
-#       - run: |
-#           cd android/app/build/outputs
-#           ls
+      - name: Upload release bundle
+        uses: actions/upload-artifact@v1
+        with:
+          name: App Bundle
+          path: android/app/build/outputs/bundle/release/app-release.aab
