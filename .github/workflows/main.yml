@@ -54,6 +54,9 @@ jobs:
 #           #TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 #           #TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           
+      - name: Checkout source
+        uses: actions/checkout@v2
+        
       - name: Start SSH via ngrok
         uses: P3TERX/ssh2actions@main
         with:
