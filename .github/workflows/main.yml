@@ -26,17 +26,17 @@ jobs:
       - name: Install app dependencies
         run: npm install
         
-      - name: Checkout source
-        uses: actions/checkout@v2
+#       - name: Checkout source
+#         uses: actions/checkout@v2
         
-      - name: Start SSH via ngrok
-        uses: P3TERX/ssh2actions@main
-        with:
-          mode: ngrok
-        env:
-          NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
-          NGROK_REGION: in
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+#       - name: Start SSH via ngrok
+#         uses: P3TERX/ssh2actions@main
+#         with:
+#           mode: ngrok
+#         env:
+#           NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+#           NGROK_REGION: in
+#           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
 
       - name: Build Ionic App
         run: npm run build
