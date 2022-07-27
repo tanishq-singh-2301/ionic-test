@@ -25,18 +25,6 @@ jobs:
 
       - name: Install app dependencies
         run: npm install
-        
-#       - name: Checkout source
-#         uses: actions/checkout@v2
-        
-#       - name: Start SSH via ngrok
-#         uses: P3TERX/ssh2actions@main
-#         with:
-#           mode: ngrok
-#         env:
-#           NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
-#           NGROK_REGION: in
-#           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
 
       - name: Build Ionic App
         run: npm run build
@@ -46,6 +34,9 @@ jobs:
         
       - name: Capacitor copy
         run: npx cap copy
+        
+      - name: Build Gradle
+        run: cd android && gradle build
         
       - name: Build apk bundle
         run: cd android && gradle assembleRelease
@@ -64,9 +55,9 @@ jobs:
         with:
           name: "APK Release Signed"
           path: ${{steps.sign_apk.outputs.signedReleaseFile}}
-          
+      
       - name: Build AAB
-        run: gradle bundleRelease
+        run: cd android && gradle bundleRelease
         
       - name: Sign AAB
         id: sign_aab
