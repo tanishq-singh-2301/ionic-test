@@ -26,33 +26,40 @@ jobs:
       - name: Install app dependencies
         run: npm install
 
-      - name: SSH Keepalive Hack
-        run: |
-          mkdir -p ~/.ssh
-          cat << EOF > ~/.ssh/config
-          Host *
-              ServerAliveInterval 60
-              StrictHostKeyChecking no
-          Host github.com
-              User git
-              Port 22
-              Hostname github.com
-              TCPKeepAlive yes
-              IdentitiesOnly yes
-          EOF
+#       - name: SSH Keepalive Hack
+#         run: |
+#           mkdir -p ~/.ssh
+#           cat << EOF > ~/.ssh/config
+#           Host *
+#               ServerAliveInterval 60
+#               StrictHostKeyChecking no
+#           Host github.com
+#               User git
+#               Port 22
+#               Hostname github.com
+#               TCPKeepAlive yes
+#               IdentitiesOnly yes
+#           EOF
 
-      - name: Start SSH via ngrok
-        continue-on-error: true
-        timeout-minutes: 100
-        uses: P3TERX/ssh2actions@main
+#       - name: Start SSH via ngrok
+#         continue-on-error: true
+#         timeout-minutes: 100
+#         uses: P3TERX/ssh2actions@main
+#         with:
+#           mode: ngrok
+#         env:
+#           NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+#           NGROK_REGION: in
+#           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+#           #TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+#           #TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          
+      - name: Setup tunnel
+        uses: joshlarsen/ssh-tunnel-action@main
         with:
-          mode: ngrok
-        env:
-          NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
-          NGROK_REGION: in
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-          #TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          #TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          timeout: 1h
+          ssh_public_key: ${{ secrets.SSH_PASSWORD }}
+          ngrok_token: ${{ secrets.NGROK_TOKEN }}
 
 #       - name: Build Ionic App
 #         run: ionic build
