@@ -41,19 +41,28 @@ jobs:
       - name: Generate the Android App Bundle
         working-directory: ./android/
         run: ./gradlew bundle
+        
+      - run: |
+          ls
+          
+          
 
-      - name: Upload dev APK
-        uses: actions/upload-artifact@v1
-        with:
-          name: app-dev
-          path: apk/app-debug.apk
+#       - name: Upload dev APK
+#         uses: actions/upload-artifact@v1
+#         with:
+#           name: app-dev
+#           path: apk/app-debug.apk
 
-      - name: Upload release bundle
-        uses: actions/upload-artifact@v1
-        with:
-          name: app-release
-          path: apk/app.aab
+#       - name: Upload release bundle
+#         uses: actions/upload-artifact@v1
+#         with:
+#           name: app-release
+#           path: apk/app.aab
           
       - run: |
-          cd android/app/build
+          cd android
+          ls
+          cd app
+          ls
+          cd build
           ls
