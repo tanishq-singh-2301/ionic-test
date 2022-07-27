@@ -25,35 +25,7 @@ jobs:
 
       - name: Install app dependencies
         run: npm install
-
-#       - name: SSH Keepalive Hack
-#         run: |
-#           mkdir -p ~/.ssh
-#           cat << EOF > ~/.ssh/config
-#           Host *
-#               ServerAliveInterval 60
-#               StrictHostKeyChecking no
-#           Host github.com
-#               User git
-#               Port 22
-#               Hostname github.com
-#               TCPKeepAlive yes
-#               IdentitiesOnly yes
-#           EOF
-
-#       - name: Start SSH via ngrok
-#         continue-on-error: true
-#         timeout-minutes: 100
-#         uses: P3TERX/ssh2actions@main
-#         with:
-#           mode: ngrok
-#         env:
-#           NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
-#           NGROK_REGION: in
-#           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-#           #TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-#           #TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          
+        
       - name: Checkout source
         uses: actions/checkout@v2
         
@@ -67,7 +39,18 @@ jobs:
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
 
 #       - name: Build Ionic App
-#         run: ionic build
+#         run: npm run build
+        
+#       - name: Capacitor update
+#         run: npx cap update
+        
+#       - name: Capacitor copy
+#         run: npx cap copy
+        
+#       - name: Build app bundle
+#         run: cd android && gradle bundle
+
+
 
 #       - name: Copy Android
 #         run: ionic capacitor copy android
