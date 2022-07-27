@@ -47,13 +47,8 @@ jobs:
       - name: Capacitor copy
         run: npx cap copy
         
-      - name: Build app bundle
-        run: cd android && gradle bundle
-        
       - name: Build apk bundle
         run: cd android && gradle assembleRelease
-        
-      - run: cd android/app/build/outputs/apk/release && ls
         
       - name: Sign APK
         id: sign_apk
@@ -63,18 +58,27 @@ jobs:
           signingKeyBase64: ${{ secrets.SIGNINGKEYBASE64 }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEYSTOREPASSWORD }}
-#           keyPassword: ${{ secrets.KEYPASSWORD }}
-
-      - run: cd android/app/build/outputs/apk/release && ls
 
       - name: Upload dev APK
         uses: actions/upload-artifact@v1
         with:
-          name: Unsigned App APK
-          path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+          name: "APK Release Signed"
+          path: ${{steps.sign_apk.outputs.signedReleaseFile}}
+          
+      - name: Build AAB
+        run: bash ./gradlew bundleRelease
+        
+      - name: Sign AAB
+        id: sign_aab
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: app/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.SIGNINGKEYBASE64 }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTOREPASSWORD }}
 
       - name: Upload release bundle
         uses: actions/upload-artifact@v1
         with:
-          name: App Bundle
-          path: android/app/build/outputs/bundle/release/app-release.aab
+          name: "AAB Release Signed"
+          path: ${{steps.sign_aab.outputs.signedReleaseFile}}
