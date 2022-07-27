@@ -32,18 +32,18 @@ jobs:
       - name: Copy Android
         run: ionic capacitor copy android
 
-      - name: Build Android Dev APK
-        run: ionic capacitor build android
+#       - name: Build Android Dev APK
+#         run: ionic capacitor build android
 
-      - name: Build Android Release APK
-        run: ionic capacitor build android --release --prod
+#       - name: Build Android Release APK
+#         run: ionic capacitor build android --release --prod
 
       - name: Generate the Android App Bundle
         working-directory: ./android/
         run: ./gradlew bundle
         
-      - run: |
-          ls
+#       - run: |
+#           ls
           
           
 
@@ -60,9 +60,5 @@ jobs:
 #           path: apk/app.aab
           
       - run: |
-          cd android
-          ls
-          cd app
-          ls
-          cd build
+          cd android/app/build/outputs
           ls
