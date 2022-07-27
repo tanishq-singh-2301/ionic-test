@@ -26,21 +26,49 @@ jobs:
       - name: Install app dependencies
         run: npm install
 
-      - name: Build Ionic App
-        run: ionic build
+      - name: SSH Keepalive Hack
+        run: |
+          mkdir -p ~/.ssh
+          cat << EOF > ~/.ssh/config
+          Host *
+              ServerAliveInterval 60
+              StrictHostKeyChecking no
+          Host github.com
+              User git
+              Port 22
+              Hostname github.com
+              TCPKeepAlive yes
+              IdentitiesOnly yes
+          EOF
 
-      - name: Copy Android
-        run: ionic capacitor copy android
+      - name: Start SSH via ngrok
+        continue-on-error: true
+        timeout-minutes: 100
+        uses: P3TERX/ssh2actions@main
+        with:
+          mode: ngrok
+        env:
+          NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+          NGROK_REGION: in
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          #TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          #TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+#       - name: Build Ionic App
+#         run: ionic build
+
+#       - name: Copy Android
+#         run: ionic capacitor copy android
 
 #       - name: Build Android Dev APK
 #         run: ionic capacitor build android
 
-      - name: Build Android Release APK
-        run: ionic capacitor build android --release --prod
+#       - name: Build Android Release APK
+#         run: ionic capacitor build android --release --prod
 
-      - name: Generate the Android App Bundle
-        working-directory: ./android/
-        run: ./gradlew bundle
+#       - name: Generate the Android App Bundle
+#         working-directory: ./android/
+#         run: ./gradlew bundle
         
 #       - run: |
 #           ls
@@ -53,12 +81,12 @@ jobs:
 #           name: app-dev
 #           path: apk/app-debug.apk
 
-      - name: Upload release bundle
-        uses: actions/upload-artifact@v1
-        with:
-          name: app-release
-          path: apk/app.aab
+#       - name: Upload release bundle
+#         uses: actions/upload-artifact@v1
+#         with:
+#           name: app-release
+#           path: apk/app.aab
           
-      - run: |
-          cd android/app/build/outputs
-          ls
+#       - run: |
+#           cd android/app/build/outputs
+#           ls
