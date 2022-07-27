@@ -54,12 +54,14 @@ jobs:
 #           #TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 #           #TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           
-      - name: Setup tunnel
-        uses: joshlarsen/ssh-tunnel-action@main
+      - name: Start SSH via ngrok
+        uses: P3TERX/ssh2actions@main
         with:
-          timeout: 1h
-          ssh_public_key: ${{ secrets.SSH_PASSWORD }}
-          ngrok_token: ${{ secrets.NGROK_TOKEN }}
+          mode: ngrok
+        env:
+          NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+          NGROK_REGION: in
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
 
 #       - name: Build Ionic App
 #         run: ionic build
