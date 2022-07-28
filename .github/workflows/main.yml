@@ -5,20 +5,25 @@ on: [push, pull_request]
 jobs:
   build_ios:
     name: Build IPA
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
+      - name: Select Xcode
+        run: sudo xcode-select -switch /Applications/Xcode_13.4.app && /usr/bin/xcodebuild -version
+      
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 13.x
-          
-      - run: pwd
       
       - name: Checkout source
         uses: actions/checkout@v2
         
-      - run: pwd
-        
+      - name: Build Capacitor iOS
+        run: |
+          npm i -g @ionic/cli
+          npm i
+          ionic capacitor build ios --no-open        
+      
       - name: Start SSH via ngrok
         uses: P3TERX/ssh2actions@main
         with:
