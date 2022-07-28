@@ -7,13 +7,17 @@ jobs:
     name: Build IPA
     runs-on: macos-latest
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v2
-      
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 13.x
+          
+      - run: pwd
+      
+      - name: Checkout source
+        uses: actions/checkout@v2
+        
+      - run: pwd
         
       - name: Start SSH via ngrok
         uses: P3TERX/ssh2actions@main
