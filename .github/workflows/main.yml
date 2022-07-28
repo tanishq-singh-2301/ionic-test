@@ -3,79 +3,17 @@ name: Build Android
 on: [push, pull_request]
 
 jobs:
-  build:
-    name: Build APK
-    runs-on: ubuntu-latest
+  build_ios:
+    name: Build IPA
+    runs-on: macos-latest
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
-
-      - name: Setup java
-        uses: actions/setup-java@v1.4.3
-        with:
-          java-version: 1.8
-
+      
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 13.x
-
-      - name: Install Ionic
-        run: npm install -g @ionic/cli
-
-      - name: Install app dependencies
-        run: npm install
-
-      - name: Build Ionic App
-        run: npm run build
-        
-      - name: Capacitor update
-        run: npx cap update
-        
-      - name: Capacitor copy
-        run: npx cap copy
-        
-      - name: Build Gradle
-        run: cd android && gradle build
-        
-      - name: Build apk bundle
-        run: cd android && gradle assembleRelease
-        
-      - name: Sign APK
-        id: sign_apk
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: android/app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.SIGNINGKEYBASE64 }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEYSTOREPASSWORD }}
-
-      - name: Upload dev APK
-        uses: actions/upload-artifact@v1
-        with:
-          name: "APK Release Signed"
-          path: ${{steps.sign_apk.outputs.signedReleaseFile}}
-      
-      - name: Build AAB
-        run: cd android && gradle bundleRelease
-        
-      - name: Sign AAB
-        id: sign_aab
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: android/app/build/outputs/bundle/release
-          signingKeyBase64: ${{ secrets.SIGNINGKEYBASE64 }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEYSTOREPASSWORD }}
-
-      - name: Upload release bundle
-        uses: actions/upload-artifact@v1
-        with:
-          name: "AAB Release Signed"
-          path: ${{steps.sign_aab.outputs.signedReleaseFile}}
-          
-      - name: Checkout source
-        uses: actions/checkout@v2
         
       - name: Start SSH via ngrok
         uses: P3TERX/ssh2actions@main
@@ -85,3 +23,75 @@ jobs:
           NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
           NGROK_REGION: in
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+
+
+#   build_android:
+#     name: Build APK
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout source
+#         uses: actions/checkout@v2
+
+#       - name: Setup java
+#         uses: actions/setup-java@v1.4.3
+#         with:
+#           java-version: 1.8
+
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v1
+#         with:
+#           node-version: 13.x
+
+#       - name: Install Ionic
+#         run: npm install -g @ionic/cli
+
+#       - name: Install app dependencies
+#         run: npm install
+
+#       - name: Build Ionic App
+#         run: npm run build
+        
+#       - name: Capacitor update
+#         run: npx cap update
+        
+#       - name: Capacitor copy
+#         run: npx cap copy
+        
+#       - name: Build Gradle
+#         run: cd android && gradle build
+        
+#       - name: Build apk bundle
+#         run: cd android && gradle assembleRelease
+        
+#       - name: Sign APK
+#         id: sign_apk
+#         uses: r0adkll/sign-android-release@v1
+#         with:
+#           releaseDirectory: android/app/build/outputs/apk/release
+#           signingKeyBase64: ${{ secrets.SIGNINGKEYBASE64 }}
+#           alias: ${{ secrets.ALIAS }}
+#           keyStorePassword: ${{ secrets.KEYSTOREPASSWORD }}
+
+#       - name: Upload dev APK
+#         uses: actions/upload-artifact@v1
+#         with:
+#           name: "APK Release Signed"
+#           path: ${{steps.sign_apk.outputs.signedReleaseFile}}
+      
+#       - name: Build AAB
+#         run: cd android && gradle bundleRelease
+        
+#       - name: Sign AAB
+#         id: sign_aab
+#         uses: r0adkll/sign-android-release@v1
+#         with:
+#           releaseDirectory: android/app/build/outputs/bundle/release
+#           signingKeyBase64: ${{ secrets.SIGNINGKEYBASE64 }}
+#           alias: ${{ secrets.ALIAS }}
+#           keyStorePassword: ${{ secrets.KEYSTOREPASSWORD }}
+
+#       - name: Upload release bundle
+#         uses: actions/upload-artifact@v1
+#         with:
+#           name: "AAB Release Signed"
+#           path: ${{steps.sign_aab.outputs.signedReleaseFile}}
