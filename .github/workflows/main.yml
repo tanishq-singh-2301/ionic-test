@@ -7,6 +7,9 @@ jobs:
     name: Build IPA
     runs-on: macos-12
     steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+        
       - name: Select Xcode
         run: sudo xcode-select -switch /Applications/Xcode_13.4.app && /usr/bin/xcodebuild -version
       
@@ -14,24 +17,34 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 13.x
-      
-      - name: Checkout source
-        uses: actions/checkout@v2
         
-      - name: Build Capacitor iOS
-        run: |
-          npm i -g @ionic/cli
-          npm i
-          ionic capacitor build ios --no-open        
+      - run: npm i -g @ionic/cli
+      - run: npm i
+      - run: npx cap copy
+      - run: npx cap copy ios
+      - run: ionic capacitor build ios --no-open
       
-      - name: Start SSH via ngrok
-        uses: P3TERX/ssh2actions@main
-        with:
-          mode: ngrok
-        env:
-          NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
-          NGROK_REGION: in
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+      - run: |
+          cd ios/App
+          xcodebuild build -scheme App -workspace App.xcworkspace
+          
+          echo 1
+          ls
+          
+          echo 2
+          cd App && ls
+          
+          echo 3
+          cd ../../ && ls
+          
+#       - name: Start SSH via ngrok
+#         uses: P3TERX/ssh2actions@main
+#         with:
+#           mode: ngrok
+#         env:
+#           NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+#           NGROK_REGION: in
+#           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
 
 
 #   build_android:
