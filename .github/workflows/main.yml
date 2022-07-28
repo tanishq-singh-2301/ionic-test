@@ -21,13 +21,13 @@ jobs:
       - run: npm i -g @ionic/cli
       - run: npm i
       - run: npx cap copy
-      - run: npx cap copy ios
+#       - run: npx cap copy ios
       - run: ionic capacitor build ios --no-open
       
       - run: |
           cd ios/App
-          xcodebuild build -scheme App -workspace App.xcworkspace
-          
+          xcodebuild clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -scheme App -workspace App.xcworkspace
+            
           echo 1
           ls
           
