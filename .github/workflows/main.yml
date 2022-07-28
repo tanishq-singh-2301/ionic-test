@@ -25,15 +25,24 @@ jobs:
       
       - run: |
           cd ios/App
-
           xcodebuild clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -scheme App -workspace App.xcworkspace -archivePath App.xcarchive archive
-          xcodebuild -exportArchive -archivePath App.xcarchive -exportPath App.ipa -exportOptionsPlist ./ExportOptions.plist
 
       - name: Upload IOS
         uses: actions/upload-artifact@v1
         with:
-          name: "IOS Folder"
+          name: "IOS Folder - 1"
           path: ios
+
+      - run: |
+          cd ios/App
+          xcodebuild -exportArchive -archivePath App.xcarchive -exportPath ./ -exportOptionsPlist ./ExportOptions.plist
+
+      - name: Upload IOS
+        uses: actions/upload-artifact@v1
+        with:
+          name: "IOS Folder - 2"
+          path: ios
+      
           
 #       - name: Start SSH via ngrok
 #         uses: P3TERX/ssh2actions@main
